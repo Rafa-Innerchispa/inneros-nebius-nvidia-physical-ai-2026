@@ -123,8 +123,20 @@ This was the second owner-approved attempt. The first failed in response parsing
 
 ## Interactive platform-backed console
 
-Open the [deployed lab console](https://won-ellis-becomes-divx.trycloudflare.com). It calls all five real InnerOS Guardian API routes. Analyze synthetic lab telemetry, prepare a dry-run plan, run an explicitly simulated verification and retrieve the backend evidence. No new paid inference or physical operation is permitted from the public UI. Phone approval remains **BLOCKED**, visibly and truthfully.
+Open the [deployed lab console](https://hotels-survey-cite-webmasters.trycloudflare.com). It calls all five real InnerOS Guardian API routes. Analyze synthetic lab telemetry, prepare a dry-run plan, run an explicitly simulated verification and retrieve the backend evidence. No new paid inference or physical operation is permitted from the public UI. Phone approval remains **BLOCKED**, visibly and truthfully.
 
 The [deployment adapter and rollback](deployment/README.md) document how the console imports the installed InnerOS router. The [public HTTPS evidence](docs/DEPLOYED_HTTP_EVIDENCE_20261027.json) records the five-route checks and denial cases. This Quick Tunnel address can change if its process restarts; it is a hackathon demo without an availability guarantee.
 
 The portable client now has a bounded output budget (default 2,048 tokens for explicitly requested live inference), retains provider usage even when content is incomplete, and never automatically retries a billable request. Current public demo interactions use local heuristic diagnostics plus the separately recorded real NVIDIA receipt; they do not silently spend credits.
+
+
+## Demo video and final handoff
+
+- [English narrated walkthrough, ~97 seconds](media/inneros-guardian-demo-20261027.mp4)
+- [English subtitles](media/inneros-guardian-demo-20261027.srt)
+- [Video provenance and scope](media/VIDEO_PROVENANCE_20261027.json)
+- [Browser E2E evidence](docs/BROWSER_QA_20261027.json)
+- [Official submission readiness checklist](docs/SUBMISSION_READINESS_20261027.md)
+- [Final deployment and rollback](docs/FINAL_DELIVERY_20261027.md)
+
+The local video is assembled and ready for owner review; no public YouTube URL or final Devpost submission is claimed.

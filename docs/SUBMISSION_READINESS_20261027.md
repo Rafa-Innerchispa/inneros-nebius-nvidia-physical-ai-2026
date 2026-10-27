@@ -9,7 +9,8 @@ Official source: Devpost connector `get_submission_requirements` and `get_key_da
 - [x] Synthetic telemetry, deterministic local analysis and simulated recovery are labeled separately from recorded real inference.
 - [x] Public phone approval blocked; no false call, approval or physical action.
 - [x] No Bellini access, no new cloud spending, no changes to existing production services.
-- [ ] Review final video asset and publish a **public YouTube URL, <=3 minutes**. A local MP4 or web-hosted MP4 alone does not satisfy the official YouTube requirement.
+- [x] Assemble a narrated application walkthrough: approximately97seconds, 1080p, local English voice and subtitles.
+- [ ] Review and publish the MP4 as a **public YouTube URL, <=3 minutes**. A local MP4 or web-hosted MP4 alone does not satisfy the official YouTube requirement.
 - [ ] For Physical AI, verify the video includes >=1 minute of actual hardware operating, or key application modules operating if no physical hardware component is claimed. Screen walkthrough must not be presented as physical recovery.
 
 ## Official required answers to review in Devpost

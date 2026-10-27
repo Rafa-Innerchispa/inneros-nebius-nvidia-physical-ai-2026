@@ -1,0 +1,15 @@
+{
+  "public_url": "https://hotels-survey-cite-webmasters.trycloudflare.com",
+  "public_source_sha": "441487be4889653af056db394de61592fb9d6ea3",
+  "core_source_sha": "b90b8e0781b6ddbe4dfdb0ecf57071396000682c",
+  "service_units": [
+    "inneros-nebius-demo-api.service",
+    "inneros-nebius-demo-tunnel.service"
+  ],
+  "scope": "synthetic lab; no new paid inference; no hardware",
+  "phone_approval": "BLOCKED",
+  "production_services_changed": false,
+  "dns_changed": false,
+  "video_duration_seconds": 96.766333,
+  "video_sha256": "cd41ea19793b3ce7d736c0be977f468cde93bc5dd31b962cba1070dac647a5a6"
+}

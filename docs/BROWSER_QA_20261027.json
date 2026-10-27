@@ -1,0 +1,9 @@
+{
+  "url": "https://hotels-survey-cite-webmasters.trycloudflare.com/",
+  "checked_at": "2026-10-27T14:33:08.745Z",
+  "activity_log": "14:27:47Z Inspected recorded provider receipt · no paid request sent.\n\n14:27:24Z GET /api/guardian/evidence/evidence_e9056746848a414c → HTTP 200\n\n14:26:54Z POST /api/guardian/recovery/verify → HTTP 200\n\n14:26:21Z POST /api/guardian/actions/plan → HTTP 200\n\n14:24:55Z POST /api/guardian/diagnose → HTTP 200\n\n14:24:14Z Loaded real Nebius receipt · chatcmpl-83fabc50-87cd-41aa-97b1-63fb7cadddc6\n\n14:24:13Z GET /api/guardian/overview → HTTP 200",
+  "phone_button_enabled": false,
+  "console_errors": [],
+  "recorded_frames": 95,
+  "scope": "actual browser interactions, synthetic lab telemetry, no new paid inference"
+}
