@@ -60,11 +60,15 @@ class NebiusNvidiaReasoning:
         base_url: Optional[str] = None,
         model: Optional[str] = None,
         timeout_seconds: float = 10.0,
+        max_output_tokens: int = 2048,
     ) -> None:
         self.api_key = api_key or os.environ.get("NEBIUS_API_KEY", "")
         self.base_url = (base_url or os.environ.get("NEBIUS_BASE_URL", DEFAULT_NEBIUS_BASE_URL)).rstrip("/")
         self.model = model or os.environ.get("NEBIUS_NVIDIA_MODEL", "")
         self.timeout_seconds = timeout_seconds
+        if type(max_output_tokens) is not int or not 1 <= max_output_tokens <= 2048:
+            raise ValueError("output_budget_must_be_between_1_and_2048")
+        self.max_output_tokens = max_output_tokens
 
     @staticmethod
     def is_nvidia_open_model(model_id: str) -> bool:
@@ -136,7 +140,7 @@ class NebiusNvidiaReasoning:
             "model": self.model,
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.1,
-            "max_tokens": 512,
+            "max_tokens": self.max_output_tokens,
             "response_format": {"type": "json_object"},
         }
         request = urllib.request.Request(
@@ -145,13 +149,29 @@ class NebiusNvidiaReasoning:
             headers={"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"},
             method="POST",
         )
+        provider_receipt = {}
         try:
             with urllib.request.urlopen(request, timeout=self.timeout_seconds) as response:
                 payload = json.loads(response.read().decode("utf-8"))
-            diagnosis = json.loads(payload["choices"][0]["message"]["content"])
+            provider_receipt = {
+                "model": self.model,
+                "response_id": str(payload.get("id") or "") or None,
+                "usage": payload.get("usage") if isinstance(payload.get("usage"), dict) else {},
+                "received_at": now_iso(),
+            }
+            choice = payload["choices"][0]
+            finish = choice.get("finish_reason")
+            provider_receipt["finish_reason"] = finish if finish in ("stop", "length", "content_filter", "tool_calls") else "other"
+            content = choice["message"].get("content")
+            if finish == "length" or not isinstance(content, str) or not content.strip():
+                raise ValueError("incomplete_diagnostic_response")
+            diagnosis = json.loads(content)
+            if not isinstance(diagnosis, dict):
+                raise ValueError("diagnostic_object_required")
         except Exception as exc:
             result = self._local(sanitized, f"REMOTE_INFERENCE_FAILED:{type(exc).__name__}")
             result["provider_receipt"] = {
+                **provider_receipt,
                 "evidence_mode": "BLOCKED",
                 "status": "REMOTE_INFERENCE_FAILED",
                 "error_type": type(exc).__name__,
@@ -167,6 +187,7 @@ class NebiusNvidiaReasoning:
             "inference_mode": "REAL",
             "diagnosis": diagnosis,
             "provider_receipt": {
+                **provider_receipt,
                 "evidence_mode": "REAL",
                 "response_id": response_id or None,
                 "receipt_sha256": hashlib.sha256(receipt_seed.encode()).hexdigest(),
