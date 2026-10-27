@@ -108,3 +108,7 @@ python3 -m pytest tests -q
 ```
 
 CI runs only offline tests and the dry-run demo; it never uses API keys or cloud credits. The five API routes describe the private integration contract; this standalone export does not expose a physical-control server.
+
+## Verified API examples
+
+See [sanitized HTTP responses](examples/api-http-evidence.json) from five actual requests to an isolated loopback ASGI runtime. This is API-contract evidence; it is not a public deployment, live Nebius inference, or physical-device recovery proof.
