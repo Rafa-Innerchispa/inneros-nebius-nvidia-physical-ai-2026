@@ -1,0 +1,54 @@
+{
+  "duration_seconds": 96.766333,
+  "width": 1920,
+  "height": 1080,
+  "sha256": "cd41ea19793b3ce7d736c0be977f468cde93bc5dd31b962cba1070dac647a5a6",
+  "bytes": 3600297,
+  "source": "Actual public-browser captures sampled at 1fps, assembled as six narrated walkthrough segments; not an uncut recording",
+  "sampled_browser_frames": 95,
+  "voice": "Microsoft Zira Desktop en-US generated locally",
+  "paid_voice_requests": 0,
+  "new_nebius_inference_requests": 0,
+  "segments": [
+    {
+      "stage": "Connected platform and recorded NVIDIA proof",
+      "frames": 15,
+      "duration_seconds": 15.286,
+      "voice": "Microsoft Zira Desktop / en-US, local"
+    },
+    {
+      "stage": "Live diagnostic endpoint over synthetic telemetry",
+      "frames": 15,
+      "duration_seconds": 15.0,
+      "voice": "Microsoft Zira Desktop / en-US, local"
+    },
+    {
+      "stage": "Dry-run plan and blocked phone authority",
+      "frames": 15,
+      "duration_seconds": 15.102,
+      "voice": "Microsoft Zira Desktop / en-US, local"
+    },
+    {
+      "stage": "Explicitly simulated recovery verification",
+      "frames": 15,
+      "duration_seconds": 15.0,
+      "voice": "Microsoft Zira Desktop / en-US, local"
+    },
+    {
+      "stage": "Backend evidence retrieval and HTTP activity log",
+      "frames": 15,
+      "duration_seconds": 15.172,
+      "voice": "Microsoft Zira Desktop / en-US, local"
+    },
+    {
+      "stage": "Recorded real NVIDIA model receipt",
+      "frames": 20,
+      "duration_seconds": 21.185,
+      "voice": "Microsoft Zira Desktop / en-US, local"
+    }
+  ],
+  "phone_approval": "BLOCKED",
+  "physical_mutation_applied": false,
+  "real_physical_recovery_verified": false,
+  "public_youtube_url": null
+}

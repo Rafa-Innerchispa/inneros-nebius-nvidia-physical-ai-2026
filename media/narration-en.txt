@@ -1,0 +1,11 @@
+InnerOS Infrastructure Guardian connects cloud reasoning to a locally governed infrastructure platform. This is the deployed console, connected to five real backend endpoints. The lab data is synthetic, and the NVIDIA inference receipt is independently recorded.
+
+First, analyze a lab incident: an offline access point with high memory pressure. This button calls the real diagnosis endpoint. Current interactive analysis uses a clearly labeled local heuristic, without another paid cloud request.
+
+Next, prepare a reboot plan. The capability gateway returns a staged dry run and an evidence receipt. The public console cannot execute that plan. Phone authorization is explicitly blocked here, rather than simulated as a real approval.
+
+Now inspect recovery verification. The backend returns a simulated probe, and the interface says physical recovery is not verified. A successful test result is never presented as proof that actual equipment restarted or recovered.
+
+The evidence button retrieves the record from the backend store. The activity log exposes request paths and HTTP outcomes, while each receipt separates the recommendation, execution policy and verification mode. This makes the workflow inspectable.
+
+Finally, inspect the real Nebius Token Factory receipt. NVIDIA Nemotron three Nano analyzed sanitized synthetic telemetry using three hundred eight input tokens and six hundred ninety two output tokens. The response identifier, token usage and evidence hash are published. Real cloud inference, local authority, and honest verification boundaries.

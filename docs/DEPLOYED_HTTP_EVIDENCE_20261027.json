@@ -1,0 +1,363 @@
+{
+  "base_url": "https://hotels-survey-cite-webmasters.trycloudflare.com",
+  "checked_at": "2026-10-27T14:23:56.834511+00:00",
+  "scope": "real HTTP platform over synthetic lab telemetry; no new cloud inference",
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/",
+      "http_status": 200,
+      "response": {
+        "html_received": true,
+        "bytes": 13265
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/healthz",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "scope": "isolated_synthetic_lab",
+        "paid_inference_enabled": false,
+        "physical_execution_enabled": false
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/guardian/overview",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "contract_version": "guardian.v1",
+        "execution_policy": "DRY_RUN_PLANNING_ONLY",
+        "external_inference_policy": "VAULT_KEY_AND_EXPLICIT_CREDIT_AUTHORIZATION_REQUIRED",
+        "evidence_modes": [
+          "REAL",
+          "SIMULATED",
+          "BLOCKED",
+          "NOT_RUN"
+        ],
+        "capabilities": [
+          "network.device.reboot.v1",
+          "network.device.poe_cycle.v1",
+          "network.device.verify_recovery.v1"
+        ],
+        "routes": [
+          "GET /api/guardian/overview",
+          "POST /api/guardian/diagnose",
+          "POST /api/guardian/actions/plan",
+          "POST /api/guardian/recovery/verify",
+          "GET /api/guardian/evidence/{id}"
+        ]
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/guardian/diagnose",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "evidence_id": "evidence_34c26bda923a42dc",
+        "result": {
+          "ok": true,
+          "provider": "local_heuristic",
+          "model": "deterministic_inneros_heuristic_v1",
+          "inference_mode": "LOCAL_HEURISTIC",
+          "fallback_engaged": true,
+          "fallback_reason": null,
+          "diagnosis": {
+            "root_cause": "Access Point buffer bloat / memory pressure",
+            "severity": "high",
+            "impact": "Clients experiencing frame drops and intermittent disconnects",
+            "recommended_action": "reboot",
+            "recommended_capability": "network.device.reboot.v1",
+            "target_device_ref": "ap_validation_01",
+            "target_port": null,
+            "requires_approval": true,
+            "confidence": 0.91,
+            "rationale": "Soft reboot will clear saturated buffers and restart radio interfaces.",
+            "verification_plan": {
+              "capability_id": "network.device.verify_recovery.v1",
+              "expected_status": "online"
+            }
+          },
+          "sanitized_inputs": {
+            "device_ref": "ap_validation_01",
+            "provider": "unifi",
+            "offline": true,
+            "latency_ms": 180,
+            "memory_utilization": 91
+          },
+          "sanitization": {
+            "private_identifiers_replaced": 0,
+            "deobfuscation_map_exposed": false
+          },
+          "provider_receipt": {
+            "evidence_mode": "NOT_RUN",
+            "provider": "nebius_token_factory",
+            "status": "FORCE_LOCAL"
+          },
+          "timestamp": "2026-10-27T14:23:54.621755+00:00",
+          "credential_source": "not_used"
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/guardian/actions/plan",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "evidence_id": "evidence_204784998f6d41b6",
+        "result": {
+          "ok": true,
+          "execution_id": "exec_03b5b28fef73",
+          "capability_id": "network.device.reboot.v1",
+          "status": "COMPLETED",
+          "result": {
+            "ok": true,
+            "status": "STAGED_DRY_RUN",
+            "dry_run": true,
+            "mutation_applied": false,
+            "provider": "unifi",
+            "device_ref": "ap_validation_01",
+            "message": "Reboot simulated successfully for 'ap_validation_01' via unifi.",
+            "plan": {
+              "action": "reboot",
+              "provider": "unifi",
+              "device_ref": "ap_validation_01",
+              "tenant_id": "pcdoctor_lab",
+              "site_id": "home_pcdoctor_lab",
+              "reason": "Automated recovery action",
+              "staged_command": "/v1/sites/home_pcdoctor_lab/devices/ap_validation_01/reboot"
+            },
+            "evidence_receipt": {
+              "receipt_id": "rcpt_75f13365f620",
+              "capability_id": "network.device.reboot.v1",
+              "action": "reboot",
+              "device_ref": "ap_validation_01",
+              "provider": "unifi",
+              "dry_run": true,
+              "status": "STAGED_DRY_RUN",
+              "evidence_mode": "SIMULATED",
+              "evidence_hash": "5d98357f74f8e73f69acb29046bad219661b20d6516db1d0cacf73da14e8109e",
+              "timestamp": "2026-10-27T14:23:54.936931+00:00",
+              "details": {
+                "action": "reboot",
+                "provider": "unifi",
+                "device_ref": "ap_validation_01",
+                "tenant_id": "pcdoctor_lab",
+                "site_id": "home_pcdoctor_lab",
+                "reason": "Automated recovery action",
+                "staged_command": "/v1/sites/home_pcdoctor_lab/devices/ap_validation_01/reboot"
+              }
+            }
+          },
+          "provenance": {
+            "started_at": "2026-10-27T14:23:54.936895+00:00",
+            "completed_at": "2026-10-27T14:23:54.937041+00:00",
+            "mode": "mutation",
+            "confidence": 1.0
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/guardian/recovery/verify",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "evidence_id": "evidence_438bdd35d7174ba2",
+        "result": {
+          "ok": true,
+          "execution_id": "exec_cd755ababb64",
+          "capability_id": "network.device.verify_recovery.v1",
+          "status": "COMPLETED",
+          "result": {
+            "ok": true,
+            "recovered": true,
+            "verification_mode": "SIMULATED",
+            "device_ref": "ap_validation_01",
+            "provider": "unifi",
+            "current_status": "online",
+            "expected_status": "online",
+            "checks": [
+              {
+                "check": "simulated_network_reachability",
+                "target": "ap_validation_01",
+                "status": "SIMULATED_PASS",
+                "timestamp": "2026-10-27T14:23:55.251528+00:00"
+              }
+            ],
+            "evidence_receipt": {
+              "receipt_id": "rcpt_ceb7791b2b0d",
+              "capability_id": "network.device.verify_recovery.v1",
+              "action": "verify_recovery",
+              "device_ref": "ap_validation_01",
+              "provider": "unifi",
+              "dry_run": true,
+              "status": "SIMULATED_RECOVERY",
+              "evidence_mode": "SIMULATED",
+              "evidence_hash": "86232be888ed08d9114a06bb32ceb2a99538ee60f93b68fa1a77f18efffeea66",
+              "timestamp": "2026-10-27T14:23:55.251535+00:00",
+              "details": {
+                "expected_status": "online",
+                "recovered": true,
+                "verification_mode": "SIMULATED",
+                "checks": [
+                  {
+                    "check": "simulated_network_reachability",
+                    "target": "ap_validation_01",
+                    "status": "SIMULATED_PASS",
+                    "timestamp": "2026-10-27T14:23:55.251528+00:00"
+                  }
+                ],
+                "started_at": "2026-10-27T14:23:55.251524+00:00",
+                "completed_at": "2026-10-27T14:23:55.251531+00:00"
+              }
+            }
+          },
+          "provenance": {
+            "started_at": "2026-10-27T14:23:55.251509+00:00",
+            "completed_at": "2026-10-27T14:23:55.251584+00:00",
+            "mode": "read_only",
+            "confidence": 1.0
+          }
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/api/guardian/evidence/evidence_34c26bda923a42dc",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "evidence": {
+          "evidence_id": "evidence_34c26bda923a42dc",
+          "kind": "diagnosis",
+          "created_at": "2026-10-27T14:23:54.621800+00:00",
+          "payload": {
+            "ok": true,
+            "provider": "local_heuristic",
+            "model": "deterministic_inneros_heuristic_v1",
+            "inference_mode": "LOCAL_HEURISTIC",
+            "fallback_engaged": true,
+            "fallback_reason": null,
+            "diagnosis": {
+              "root_cause": "Access Point buffer bloat / memory pressure",
+              "severity": "high",
+              "impact": "Clients experiencing frame drops and intermittent disconnects",
+              "recommended_action": "reboot",
+              "recommended_capability": "network.device.reboot.v1",
+              "target_device_ref": "ap_validation_01",
+              "target_port": null,
+              "requires_approval": true,
+              "confidence": 0.91,
+              "rationale": "Soft reboot will clear saturated buffers and restart radio interfaces.",
+              "verification_plan": {
+                "capability_id": "network.device.verify_recovery.v1",
+                "expected_status": "online"
+              }
+            },
+            "sanitized_inputs": {
+              "device_ref": "ap_validation_01",
+              "provider": "unifi",
+              "offline": true,
+              "latency_ms": 180,
+              "memory_utilization": 91
+            },
+            "sanitization": {
+              "private_identifiers_replaced": 0,
+              "deobfuscation_map_exposed": false
+            },
+            "provider_receipt": {
+              "evidence_mode": "NOT_RUN",
+              "provider": "nebius_token_factory",
+              "status": "FORCE_LOCAL"
+            },
+            "timestamp": "2026-10-27T14:23:54.621755+00:00",
+            "credential_source": "not_used"
+          }
+        }
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/guardian/diagnose",
+      "http_status": 409,
+      "response": {
+        "detail": "new_paid_inference_disabled"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/api/guardian/recovery/verify",
+      "http_status": 409,
+      "response": {
+        "detail": "public_verification_is_simulation_only"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/examples/nebius-live-receipt.json",
+      "http_status": 200,
+      "response": {
+        "ok": true,
+        "mode": "REAL",
+        "provider_receipt": {
+          "evidence_mode": "REAL",
+          "provider": "nebius_token_factory",
+          "base_url": "https://api.tokenfactory.nebius.com/v1",
+          "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+          "response_id": "chatcmpl-83fabc50-87cd-41aa-97b1-63fb7cadddc6",
+          "usage": {
+            "completion_tokens": 692,
+            "prompt_tokens": 308,
+            "total_tokens": 1000,
+            "completion_tokens_details": null,
+            "prompt_tokens_details": null
+          },
+          "receipt_sha256": "15a774daa61b138c6b95da275f35216fc3b71f6d980575ea0bbce259318eff6a",
+          "received_at": "2026-10-27T13:31:16.823439+00:00",
+          "finish_reason": "stop"
+        },
+        "diagnosis": {
+          "root_cause": "Device is offline with high memory utilization indicating a hung process",
+          "severity": "high",
+          "impact": "All clients associated with the AP lose connectivity, causing service disruption",
+          "recommended_action": "reboot",
+          "recommended_capability": "network.device.reboot.v1",
+          "target_device_ref": "ap_validation_01",
+          "target_port": 1,
+          "requires_approval": true,
+          "confidence": 0.95,
+          "rationale": "The AP is offline despite being powered, memory usage is at 91% suggesting it is unresponsive; a reboot is the most direct remediation.",
+          "verification_plan": {
+            "capability_id": "network.device.verify_recovery.v1",
+            "expected_status": "online"
+          }
+        },
+        "sanitization": {
+          "private_identifiers_replaced": 0,
+          "deobfuscation_map_exposed": false
+        },
+        "credit_requests_attempted": 1,
+        "physical_mutation_applied": false,
+        "secret_printed": false,
+        "scope": "Real Nebius inference over synthetic telemetry; no real physical action or recovery proven.",
+        "attempt_history": {
+          "total_live_attempts_authorized_and_sent": 2,
+          "first_attempt": "Parser TypeError; original provider usage unavailable",
+          "second_attempt": "REAL receipt below; 1000 total tokens"
+        }
+      }
+    }
+  ],
+  "phone_approval": "BLOCKED",
+  "physical_mutation_applied": false,
+  "live_recovery_verified": false,
+  "new_paid_inference_requests": 0,
+  "hosting_caveat": "Quick Tunnel URL changes on tunnel restart; no availability guarantee"
+}
