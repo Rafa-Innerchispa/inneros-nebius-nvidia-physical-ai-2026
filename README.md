@@ -112,3 +112,10 @@ CI runs only offline tests and the dry-run demo; it never uses API keys or cloud
 ## Verified API examples
 
 See [sanitized HTTP responses](examples/api-http-evidence.json) from five actual requests to an isolated loopback ASGI runtime. This is API-contract evidence; it is not a public deployment, live Nebius inference, or physical-device recovery proof.
+
+
+## Verified live inference — 27 October 2026
+
+The private InnerOS adapter completed one evidenced real inference using `nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B` on Nebius Token Factory. The [sanitized provider receipt](examples/nebius-live-receipt.json) records 308 input tokens, 692 output tokens, response ID and finish reason. Telemetry was synthetic; no physical action was executed or recovery verified.
+
+This was the second owner-approved attempt. The first failed in response parsing and its usage was not retained. No automatic paid retries were used. The public demo still defaults to offline simulated inference; this receipt does not imply that running it without credentials invokes Nebius.
