@@ -1,6 +1,6 @@
 # Phone approval integration contract (Nebius Physical AI demo)
 
-Status: **integration pending**. Phone calls are not yet wired into the public web console. Existing telephony in InnerOS must be reused, not duplicated.
+Status: **BLOCKED in the public console**. Phone calls are not yet wired into the public web console. Existing telephony in InnerOS must be reused, not duplicated.
 
 ## Required flow
 
