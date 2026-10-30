@@ -67,3 +67,22 @@ all five public source combinations. On failure restore the previous release
 override and restart only the API; preserve audit databases and provider receipts.
 The existing public tunnel, HA, Atlas, VoiceOps and customer equipment are not
 reconfigured by this deployment. No high-availability guarantee is claimed.
+
+## Branded PDF exports
+
+The report dialog exports a branded PDF from persisted source snapshots, the
+recorded Nemotron result or a session-owned callback audit. Technical JSON remains
+available separately. PDF creation does not query a model, dial or authorize an
+action. The vector spark logo, source dates, uncertainty notes and evidence hashes
+are included in the document. PDFs use no-store attachment responses.
+
+Install `deployment/pdf-requirements.txt` only into the isolated Guardian
+`~/.local/share/inneros-nebius-demo/pdf-deps` target; do not modify the shared
+platform Python environment. `pdf_report.py` loads that private dependency path.
+PyMuPDF was used only to render pages for QA, not to control the browser.
+
+The public owner-call control links to the existing authenticated Home Assistant
+inbox. It is not a public approval bypass. The request deadline and status remain
+visible, and the tab can restore its own request ID after refresh; the existing
+session gate still protects status and PDF access. No owner response means expiry
+without dialing. PDF and status verification do not create a new approval.
