@@ -47,11 +47,12 @@ def test_voiceops_style_and_semantic_controls_are_present():
 def test_frontend_keeps_real_api_and_fail_closed_boundary():
     page = WEB.read_text(encoding="utf-8")
     for path in (
-        "overview", "diagnose", "actions/plan", "recovery/verify", "evidence/",
+        "overview", "diagnose", "actions/plan", "permits/verify", "evidence/",
     ):
         assert path in page
     assert "LOCAL_HEURISTIC" in page
-    assert "simulation:true" in page
+    assert "physical" in page and "SIMULATED" in page
+    assert "permits/decision" in page and "S.permit?.status!=='APPROVED'" in page
     assert "NOT VERIFIED" in page
     assert "No call is placed here" in page
     assert "Phone approvals were tested" not in page or "not connected" in page
