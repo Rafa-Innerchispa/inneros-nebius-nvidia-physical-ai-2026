@@ -32,7 +32,7 @@ def test_live_call_snapshot_binding_cooldown_and_session(tmp_path):
 
 def test_server_metrics_only_publish_structural_status():
     items=sanitize_home('servers',{'nodes':[{'id':'private','name':'192.168.1.4','ok':True,'summary':{'password':'never-publish'}}]})
-    assert items[0]['state']=='reachable'
+    assert items[0]['state']=='checks_passed'
     assert '192.168' not in json.dumps(items) and 'password' not in json.dumps(items)
 
 def test_no_budget_is_implicit_and_expired_grant_is_denied(monkeypatch,tmp_path):

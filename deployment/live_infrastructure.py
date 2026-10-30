@@ -21,6 +21,7 @@ def scalar(value):
     s=str(value or '').strip().lower()
     if s in STATES:return s
     if re.fullmatch(r'-?\d{1,10}(?:\.\d{1,6})?',s):return float(s)
+    if timestamp(s):return timestamp(s)
     return 'not_published'
 def public_ref(value):return 'asset_'+hashlib.sha256(str(value).encode()).hexdigest()[:10]
 def sanitize_home(category,raw):
@@ -28,12 +29,19 @@ def sanitize_home(category,raw):
     if category in ('network','cameras'):
         # Strict site separation: external connectors never leak into home results.
         entities=[x for x in raw.get('entities',[]) if isinstance(x,dict) and 'bellini' not in (str(x.get('entity_id',''))+' '+str(x.get('label',''))).lower()]
+        labels={}
+        for target in raw.get('targets') or []:
+            text=str(target.get('label','')).lower()
+            label='Living AP' if 'living' in text else 'Estudio AP' if 'estudio' in text or 'study' in text else 'UniFi 03 AP' if any(v in text for v in ('cuarto','bedroom','unifi 03','unifi03')) else None
+            if label:
+                labels[target.get('status_entity')]=label+' connectivity'
+                labels[target.get('uptime_entity')]=label+' uptime since'
         for index,x in enumerate(entities[:40],1):
             unit=x.get('unit','');unit=unit if unit in ('%','ms','s','W','V','A','kWh','Wh','Mbps','Mbit/s','°C','dBm','B','MB','GB','h','min','') else ''
-            items.append({'ref':public_ref(x.get('entity_id')),'label':('Network signal ' if category=='network' else 'Camera / recorder signal ')+str(index),'kind':str(x.get('entity_id','')).partition('.')[0] if str(x.get('entity_id','')).partition('.')[0] in ('sensor','binary_sensor','camera','switch') else 'signal','state':scalar(x.get('state')),'unit':unit,'source_updated_at':timestamp(x.get('last_updated'))})
+            items.append({'ref':public_ref(x.get('entity_id')),'label':labels.get(x.get('entity_id')) or ('Network signal ' if category=='network' else 'Camera / recorder signal ')+str(index),'kind':str(x.get('entity_id','')).partition('.')[0] if str(x.get('entity_id','')).partition('.')[0] in ('sensor','binary_sensor','camera','switch') else 'signal','state':scalar(x.get('state')),'unit':unit,'source_updated_at':timestamp(x.get('last_updated'))})
     elif category=='servers':
         for i,x in enumerate(raw.get('nodes') or [],1):
-            items.append({'ref':public_ref(x.get('id',i)),'label':'InnerOS server '+str(i),'kind':'server','state':'reachable' if x.get('ok') is True else 'not_reachable' if x.get('ok') is False else 'unknown','source_updated_at':None})
+            items.append({'ref':public_ref(x.get('id',i)),'label':'InnerOS server '+str(i),'kind':'server_service_checks','state':'checks_passed' if x.get('ok') is True else 'checks_need_attention' if x.get('ok') is False else 'unknown','source_updated_at':None})
     else:
         metrics={'grid_present':'Grid detected','battery_mode':'Battery mode','outage_active':'Outage detected','battery_capacity_percent':'Battery charge','output_power_w':'Inverter output load','battery_voltage_v':'Battery voltage','remaining_hours':'Estimated backup hours'}
         for key,label in metrics.items():
@@ -96,6 +104,7 @@ class LiveInfrastructure:
             age=max(0,(datetime.now(timezone.utc)-datetime.fromisoformat(source_updated)).total_seconds()) if source_updated else None
             unavailable=sum(x['state'] in ('unavailable','unknown','not_reachable','offline','disconnected') for x in items)
             result={'ok':True,'mode':'REAL_READ_ONLY','site':site,'site_label':CATALOG[site]['label'],'category':category,'source':source,'collected_at':started,'source_observed_at':source_updated,'source_age_seconds':round(age,1) if age is not None else None,'freshness':'STALE' if age is not None and age>180 else 'RECENT_SOURCE_SAMPLE' if age is not None else 'SOURCE_UPDATE_TIMES_PER_SIGNAL','signals':items,'summary':{'signal_count':len(items),'unavailable_or_unreachable_signals':unavailable},'limitations':['Reachability is from the existing monitor, not proof of hardware failure.','A Home Assistant entity update timestamp is not a new physical probe.','No new Nemotron inference has been performed for this reading.'],'physical_mutation_applied':False,'inference_mode':'NOT_REQUESTED','delivery':'COLLECTED_FROM_EXISTING_SOURCE'}
+            result['summary']['signals_needing_review']=sum(x['state'] in ('unavailable','unknown','not_reachable','offline','disconnected','checks_need_attention') for x in items)
             result['snapshot_digest']=digest(result);result['snapshot_id']='obs_'+secrets.token_hex(12)
             with self.db() as db:
                 if db.execute('SELECT count(*) FROM observations').fetchone()[0]>=3000:raise RuntimeError('observation_storage_limit')
