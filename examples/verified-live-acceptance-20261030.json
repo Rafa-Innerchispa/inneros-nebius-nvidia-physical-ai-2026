@@ -1,0 +1,87 @@
+{
+  "verified_at": "2026-10-30T16:44:40.392935+00:00",
+  "application": "https://guardian.creatorcore.ai/",
+  "scope": "Real read-only infrastructure, recorded real inference, authenticated provider catalog and owner-approved informational phone call",
+  "functional_source_revision": "d767b69e767f69771b34637a9524891e8872bbb8",
+  "voiceops_deployed_revision": "592caf933773c187960e41e165482aab12778fbe",
+  "nemotron": {
+    "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "inference_mode": "REAL",
+    "provider_receipt": {
+      "evidence_mode": "REAL",
+      "provider": "nebius_token_factory",
+      "base_url": "https://api.tokenfactory.nebius.com/v1",
+      "model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+      "response_id": "chatcmpl-5de01922-537c-4436-b520-de5fda0b2cd0",
+      "usage": {
+        "completion_tokens": 1745,
+        "prompt_tokens": 3404,
+        "total_tokens": 5149,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": null
+      },
+      "receipt_sha256": "1e89f2c355d0f21885a3bd7aa3ba2bdabce76111fcd714de72aa837130b6266a",
+      "received_at": "2026-10-30T15:14:13.364738+00:00",
+      "finish_reason": "stop"
+    },
+    "requested_at": "2026-10-30T15:13:47.569560+00:00",
+    "elapsed_seconds": 25.795,
+    "max_output_tokens": 2048,
+    "note": "Recorded real point-in-time inference; reading it again is not a new generation"
+  },
+  "provider_connection": {
+    "checked_at": "2026-10-30T16:30:16.523796+00:00",
+    "checked_epoch": 1793377816.5237944,
+    "provider": "nebius_token_factory",
+    "method": "GET",
+    "endpoint": "https://api.tokenfactory.nebius.com/v1/models",
+    "requested_model": "nvidia/NVIDIA-Nemotron-3-Nano-30B-A3B",
+    "generation_requests_sent": 0,
+    "generated_tokens": 0,
+    "inference_performed": false,
+    "delivery": "REAL_PROVIDER_CATALOG_CHECK",
+    "new_external_request": true,
+    "minimum_check_interval_seconds": 60,
+    "provider_http_status": 200,
+    "model_count": 30,
+    "requested_model_available": true,
+    "ok": true,
+    "elapsed_seconds": 0.818
+  },
+  "call": {
+    "id": "call_308f8268db41d59ec64b6f1f",
+    "snapshot_id": "obs_6acadc2d0db64dc8badf6e83",
+    "digest": "f4b6c75b1a6e3500fd796c8d92950e93b7ab6760d617785d10039973a2ec1aa6",
+    "status": "COMPLETED",
+    "owner_authority": {
+      "status": "completed",
+      "authorized_at": "2026-10-30T16:38:30.760271+00:00",
+      "evidence": {
+        "executed": true,
+        "verified": true
+      },
+      "finished_at": "2026-10-30T16:40:43.777771+00:00"
+    },
+    "owner_confirmed_heard_report": true,
+    "owner_confirmed_report_replay": true,
+    "confirmation_source": "Owner explicit reply in Codex on 30 October 2026"
+  },
+  "validation": {
+    "private_guardian_tests_passed": 41,
+    "guardian_prs": [
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "voiceops_pr": 13,
+    "public_http_source_checks": 5,
+    "unauthorized_generation_http": 409,
+    "physical_device_mutations": 0,
+    "new_paid_inference_requests_during_final_verification": 0
+  }
+}
