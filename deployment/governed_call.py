@@ -17,9 +17,9 @@ def spoken_report(snapshot):
     attention=[x for x in signals if x.get('state')=='checks_need_attention']
     at=snapshot.get('source_observed_at') or snapshot['collected_at']
     clock=datetime.fromisoformat(at).astimezone(timezone(timedelta(hours=-5))).strftime('%H:%M')
-    text=f'Te llamo por la revisión de {category} en {site}. Lectura de las {clock}, hora de Ecuador. '
+    text=f'Informe de {category} en {site}. '
     if bad:
-        text+=f'El monitor no alcanza {len(bad)} señales: '+', '.join(x['label'] for x in bad[:3])+'. Esto no confirma una avería física. '
+        text+=f'De {len(signals)} señales, el monitor no alcanza {len(bad)}: '+', '.join(x['label'] for x in bad[:3])+'. Esto no confirma una avería física. '
     elif attention:text+=f'{len(attention)} servidores tienen comprobaciones de servicios que requieren revisión; no significa que estén apagados. '
     elif snapshot['category']=='energy':
         values={x['ref']:x['state'] for x in signals}
@@ -27,10 +27,18 @@ def spoken_report(snapshot):
         elif values.get('outage_active') in (False,'off','false') and values.get('battery_mode') in (False,'off','false'):text+='La fuente no reporta un corte activo en esta lectura. '
         else:text+='La fuente no confirma el estado de corte o batería en esta lectura. '
         if type(values.get('battery_capacity_percent')) in (int,float):text+=f'Batería al {values["battery_capacity_percent"]} por ciento. '
-    else:text+=f'Revisé {len(signals)} señales disponibles; no aparecen inaccesibles en esta lectura. '
+        if type(values.get('output_power_w')) in (int,float):text+=f'Carga del inversor: {values["output_power_w"]} vatios. '
+    elif snapshot['category']=='network':
+        targets=[x for x in signals if 'connectivity' in x.get('label','')][:3]
+        states={'connected':'conectado','online':'en línea','unknown':'sin estado confirmado','unavailable':'sin lectura'}
+        if targets:text+='Según el colector: '+', '.join(x['label'].replace(' AP connectivity','')+' '+states.get(x['state'],'estado '+str(x['state'])) for x in targets)+'. '
+        else:text+=f'Revisé {len(signals)} señales; no aparecen inaccesibles en esta lectura. '
+    elif snapshot['category']=='cameras':text+=f'{len(signals)} señales consultadas; {sum(x["state"]=="recording" for x in signals)} indican grabación. No es el inventario completo de cámaras. '
+    else:text+=f'Revisé {len(signals)} señales; no aparecen inaccesibles en esta lectura. '
+    text+=f'Lectura de las {clock}, hora de Ecuador. '
     if snapshot.get('freshness')=='STALE':text+='Atención: la muestra está desactualizada. '
     elif not snapshot.get('source_observed_at'):text+='La hora indica la consulta; algunos estados pueden ser anteriores. '
-    return (text+'Esta llamada solo informa; no autoriza acciones sobre equipos.')[:600]
+    return text[:530]+' Esta llamada solo informa; no autoriza acciones sobre equipos.'
 
 def helper_main():
     """Run in canonical private Python; read only named existing config keys."""
