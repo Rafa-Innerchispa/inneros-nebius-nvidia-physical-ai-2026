@@ -4,7 +4,7 @@ from pathlib import Path
 from functools import lru_cache
 from contextlib import asynccontextmanager
 from fastapi import APIRouter,Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse,Response
 import httpx
 from deployment.live_infrastructure import LiveInfrastructure,CATALOG,now,digest
 from deployment.governed_call import prepare_call,worker
@@ -56,7 +56,8 @@ async def call_request(request:Request):
     except ValueError as e:return JSONResponse({'detail':str(e)},status_code=429 if 'cooldown' in str(e) else 409)
     try:
         reason=await prepare_call(store(),request_id,snapshot)
-        return {'ok':True,'request_id':request_id,'status':'AWAITING_OWNER_APPROVAL','spoken_report':reason,'snapshot_id':snapshot['id'],'snapshot_digest':snapshot['digest'],'approval_url':'https://ha.pcdoctor.ai/inneros-approvals/pendientes','physical_device_action_authorized':False}
+        with store().db() as db:expiry=db.execute('SELECT expires FROM live_calls WHERE id=?',(request_id,)).fetchone()[0]
+        return {'ok':True,'request_id':request_id,'status':'AWAITING_OWNER_APPROVAL','expires_at_epoch':expiry,'spoken_report':reason,'snapshot_id':snapshot['id'],'snapshot_digest':snapshot['digest'],'approval_url':'https://ha.pcdoctor.ai/inneros-approvals/pendientes','physical_device_action_authorized':False}
     except Exception:
         store().save_call(request_id,'PREPARATION_UNVERIFIED',{})
         return JSONResponse({'detail':'call_preparation_unverified_check_existing_owner_inbox_do_not_retry','request_id':request_id},status_code=502)
@@ -64,6 +65,31 @@ async def call_request(request:Request):
 async def call_status(request_id:str,request:Request):
     try:return await store().call_status(request_id,sid(request))
     except ValueError as e:return JSONResponse({'detail':str(e)},status_code=404)
+def pdf_response(content,name):
+    return Response(content,media_type='application/pdf',headers={'Content-Disposition':'attachment; filename="'+name+'"','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'})
+@router.get('/reports/snapshots/{snapshot_id}.pdf')
+async def export_snapshot(snapshot_id:str):
+    from deployment.pdf_report import snapshot_pdf
+    try:row=store().get(snapshot_id)
+    except ValueError:return JSONResponse({'detail':'snapshot_not_found'},status_code=404)
+    data=json.loads(row['body'])
+    return pdf_response(await asyncio.to_thread(snapshot_pdf,data),'guardian-'+data['site']+'-'+data['category']+'.pdf')
+@router.get('/reports/analysis.pdf')
+async def export_analysis():
+    from deployment.pdf_report import analysis_pdf
+    path=state_path('real-infrastructure-nemotron.json')
+    if not path.exists():return JSONResponse({'detail':'no_recorded_model_analysis'},status_code=404)
+    return pdf_response(await asyncio.to_thread(analysis_pdf,json.loads(path.read_text())),'guardian-nemotron-evidence.pdf')
+@router.get('/reports/calls/{request_id}.pdf')
+async def export_call(request_id:str,request:Request):
+    from deployment.pdf_report import call_pdf
+    try:data=await store().call_status(request_id,sid(request))
+    except ValueError:return JSONResponse({'detail':'call_request_not_found'},status_code=404)
+    return pdf_response(await asyncio.to_thread(call_pdf,data),'guardian-owner-call-audit.pdf')
+@router.get('/reports/overview.pdf')
+async def export_overview():
+    from deployment.pdf_report import overview_pdf
+    return pdf_response(await asyncio.to_thread(overview_pdf),'guardian-evaluation-guide.pdf')
 @router.get('/analysis')
 def analysis():
     path=state_path('real-infrastructure-nemotron.json')
