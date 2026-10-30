@@ -23,8 +23,9 @@ def spoken_report(snapshot):
     elif attention:text+=f'{len(attention)} servidores tienen comprobaciones de servicios que requieren revisión; no significa que estén apagados. '
     elif snapshot['category']=='energy':
         values={x['ref']:x['state'] for x in signals}
-        if values.get('outage_active') is True or values.get('battery_mode') is True:text+='La fuente reporta operación con batería o corte de red. '
-        else:text+='La fuente no reporta un corte activo en esta lectura. '
+        if values.get('outage_active') in (True,'on','true') or values.get('battery_mode') in (True,'on','true'):text+='La fuente reporta operación con batería o corte de red. '
+        elif values.get('outage_active') in (False,'off','false') and values.get('battery_mode') in (False,'off','false'):text+='La fuente no reporta un corte activo en esta lectura. '
+        else:text+='La fuente no confirma el estado de corte o batería en esta lectura. '
         if type(values.get('battery_capacity_percent')) in (int,float):text+=f'Batería al {values["battery_capacity_percent"]} por ciento. '
     else:text+=f'Revisé {len(signals)} señales disponibles; no aparecen inaccesibles en esta lectura. '
     if snapshot.get('freshness')=='STALE':text+='Atención: la muestra está desactualizada. '
