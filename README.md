@@ -123,7 +123,7 @@ This was the second owner-approved attempt. The first failed in response parsing
 
 ## Interactive platform-backed console
 
-Open the [deployed lab console](https://hotels-survey-cite-webmasters.trycloudflare.com). It calls all five real InnerOS Guardian API routes. Analyze synthetic lab telemetry, prepare a dry-run plan, run an explicitly simulated verification and retrieve the backend evidence. No new paid inference or physical operation is permitted from the public UI. Phone approval remains **BLOCKED**, visibly and truthfully.
+The last validated lab deployment used an ephemeral Cloudflare Quick Tunnel. The stable branded hostname **guardian.creatorcore.ai** is the designated release target; DNS and external HTTPS verification are still pending. Until its health checks pass, do not treat that URL as live. To reproduce the backend-backed demo, follow [deployment instructions](deployment/README.md). It calls all five real InnerOS Guardian API routes. Analyze synthetic lab telemetry, prepare a dry-run plan, run an explicitly simulated verification and retrieve the backend evidence. No new paid inference or physical operation is permitted from the public UI. Phone approval remains **BLOCKED**, visibly and truthfully.
 
 The [deployment adapter and rollback](deployment/README.md) document how the console imports the installed InnerOS router. The [public HTTPS evidence](docs/DEPLOYED_HTTP_EVIDENCE_20261027.json) records the five-route checks and denial cases. This Quick Tunnel address can change if its process restarts; it is a hackathon demo without an availability guarantee.
 
