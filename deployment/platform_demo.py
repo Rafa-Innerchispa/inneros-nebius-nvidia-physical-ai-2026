@@ -94,6 +94,9 @@ def diagnose(body:dict):
     if digest(body.get('telemetry'))!=data['telemetry_sha256']:return JSONResponse({'detail':'cached_response_does_not_match_telemetry'},status_code=409)
     result={**data['result'],'delivery_mode':'CACHED_PROVIDER_RESPONSE','new_paid_request':False}
     evidence=guardian._record('diagnosis',result)
+    # Numeric provider usage counters are evidence, not secret bearer tokens.
+    usage=data['result'].get('provider_receipt',{}).get('usage',{})
+    evidence['payload']['provider_receipt']['usage']={k:v for k,v in usage.items() if k in ('prompt_tokens','completion_tokens','total_tokens') and type(v) is int}
     return {'ok':True,'evidence_id':evidence['evidence_id'],'result':evidence['payload']}
 
 def session(request):
