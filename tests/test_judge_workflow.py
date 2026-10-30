@@ -68,3 +68,13 @@ def test_real_cached_result_must_match_exact_input(client,monkeypatch,tmp_path):
     assert ok.status_code==200 and ok.json()['result']['new_paid_request'] is False
     changed=client.post('/api/guardian/diagnose',json={'inference_mode':'REAL_CACHED','telemetry':{**telemetry,'offline':False}})
     assert changed.status_code==409
+
+def test_phone_proof_is_read_only_redacted_and_never_action_authority(client,monkeypatch,tmp_path):
+    path=tmp_path/'phone-proof.json';monkeypatch.setenv('GUARDIAN_PHONE_PROOF_FILE',str(path))
+    assert client.get('/api/guardian/phone/proof').json()['status']=='NOT_VERIFIED'
+    path.write_text(json.dumps({'phone':'never-public','owner_id':'never-public','proposal_digest':'bound-proposal','existing_authority_readback':{'status':'completed','execution':{'executed':True,'verified':True}},'readback':{'approval_channel':'home_assistant_companion'},'owner_confirmation':{'conversation_succeeded':True}}))
+    response=client.get('/api/guardian/phone/proof');proof=response.json()
+    assert proof['status']=='REAL_CALL_VERIFIED'
+    assert proof['physical_action_authorized'] is False
+    assert proof['public_dialing_enabled'] is False
+    assert 'never-public' not in response.text

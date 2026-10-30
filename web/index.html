@@ -418,7 +418,7 @@ dialog{color:#dff3ff;background:#0a1728;border:1px solid #3f93ba;border-radius:2
       <div><b>REASON</b><strong>Nemotron 3 Nano · Nebius</strong><span id="connModel">CHECK</span></div>
       <div><b>GATEWAY</b><strong>Five Guardian endpoints</strong><span id="connGateway">CHECK</span></div>
       <div><b>POLICY</b><strong>Bounded, dry-run actions</strong><span>ENFORCED</span></div>
-      <div><b>APPROVAL</b><strong>Owner-only VoiceOps bridge</strong><span>OWNER ONLY</span></div>
+      <div><b>APPROVAL</b><strong>Owner-only VoiceOps bridge</strong><span id="phoneProofState">OWNER ONLY</span></div>
       <div><b>PROOF</b><strong>Evidence receipts + replay</strong><span id="connProof">READY</span></div>
     </div>
   </div>
@@ -451,7 +451,7 @@ dialog{color:#dff3ff;background:#0a1728;border:1px solid #3f93ba;border-radius:2
       <p id="diagnosisSummary" style="margin-top:10px">Start the walkthrough: inspect an offline access point, diagnose it, stage a safe plan, then approve or reject the lab proposal.</p>
     </section>
     <section class="guardian-panel">
-      <h2>AUTHORIZATION BOUNDARY <span class="status-label blocked">GATED</span></h2>
+      <h2>AUTHORIZATION BOUNDARY <span class="status-label blocked">GATED</span></h2><p id="phoneProofSummary">Checking the recorded owner call proof…</p><button class="guardian-action" id="inspectPhone" style="margin:10px 0">Inspect phone evidence</button>
       <p>PERMIT lets you approve or reject a <strong>lab-only</strong> proposal. Owner calls use the private Atlas → Home Assistant → VoiceOps bridge and require authenticated owner approval. <strong>A lab decision never authorizes hardware.</strong> No call is placed here by a public visitor. Telephone acceptance of a Guardian action is <strong>NOT VERIFIED</strong>.</p>
     </section>
     <section class="guardian-panel full">
@@ -487,7 +487,7 @@ dialog{color:#dff3ff;background:#0a1728;border:1px solid #3f93ba;border-radius:2
 'use strict';
 const E=id=>document.getElementById(id);
 const TELEMETRY={site_id:'site_alpha',device_ref:'ap_validation_01',provider:'unifi',offline:true,latency_ms:180,memory_utilization:91};
-const S={ready:false,busy:false,cloud:null,selected:null,lastEvidence:'',planEvidence:'',diagnosed:false,planned:false,verified:false,permit:null,visited:new Set()};
+const S={ready:false,busy:false,cloud:null,selected:null,lastEvidence:'',planEvidence:'',diagnosed:false,planned:false,verified:false,permit:null,phone:null,visited:new Set()};
 function toast(title,detail,kind='info'){E('guardianToastTitle').textContent=title;E('guardianToastText').textContent=detail;E('guardianToast').dataset.kind=kind;E('guardianToast').hidden=false;}
 E('guardianToastClose').onclick=()=>E('guardianToast').hidden=true;
 function statusLine(title,detail,kind){E('headline').textContent=title;E('captionDetail').textContent=detail;E('led').className='guardian-led'+(kind==='ok'?' ok':kind==='off'?' off':'');}
@@ -509,5 +509,7 @@ E('runCore').onclick=()=>task(async()=>{await diagnose();await plan();await perm
 E('reasoningMode').onchange=reset;
 E('download').onclick=()=>{if(!S.selected)return;const u=URL.createObjectURL(new Blob([JSON.stringify(S.selected,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=u;a.download='guardian-evidence.json';a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);};
 async function loadCloud(){let d;try{const r=await fetch('/api/guardian/inference',{cache:'no-store'}),info=await r.json();if(!r.ok||!info.ok)throw new Error('No current provider receipt');d=info.data;E('reasoningMode').value='REAL_CACHED';}catch{const r=await fetch('/examples/nebius-live-receipt.json',{cache:'no-store'});if(!r.ok)throw new Error('Provider evidence unavailable');d=await r.json();E('reasoningMode').value='LOCAL_HEURISTIC';E('reasoningMode').options[0].disabled=true;}const p=d.result?.provider_receipt||d.provider_receipt||{};if(!p.response_id||p.evidence_mode!=='REAL')throw new Error('Provider receipt unverified');S.cloud=d;E('receiptBadge').textContent='REAL · SAVED';E('modelTitle').textContent='NEMOTRON · REAL';E('connModel').textContent='REAL · SAVED';E('tokenCount').textContent=String(p.usage?.total_tokens||'—')+' TOKENS';E('cloudMeta').textContent=p.model+' · '+String(p.received_at||'').slice(0,10);E('cloudSummary').textContent='Real provider response over synthetic lab telemetry. Reused only for identical signals; visitors cannot spend credits.';record('Provider response verified: '+p.response_id);}
-async function init(){await Promise.allSettled([task(discover),loadCloud().catch(e=>{record(e.message,true);E('modelTitle').textContent='UNVERIFIED';E('reasoningMode').value='LOCAL_HEURISTIC';})]);syncButtons();}init();
+async function loadPhone(){const d=await api('phone/proof');S.phone=d;E('phoneProofState').textContent=d.status==='REAL_CALL_VERIFIED'?'CALL VERIFIED':'OWNER ONLY';E('phoneProofSummary').textContent=d.status==='REAL_CALL_VERIFIED'?'Real owner call completed through Atlas, Home Assistant approval and VoiceOps. This recorded test is not a call for the current visitor.':'No completed owner call has been verified in this release.';}
+E('inspectPhone').onclick=()=>task(async()=>{await loadPhone();display(S.phone,'REAL OWNER CALL · RECORDED TEST');toast('Owner call evidence',S.phone.status+' · No physical action authorization.','ok');});
+async function init(){await Promise.allSettled([task(discover),loadPhone(),loadCloud().catch(e=>{record(e.message,true);E('modelTitle').textContent='UNVERIFIED';E('reasoningMode').value='LOCAL_HEURISTIC';})]);syncButtons();}init();
 </script></body></html>

@@ -86,6 +86,15 @@ def inference_status():
     data=current_inference()
     return {'ok':bool(data),'new_paid_requests_enabled':False,'source':'CACHED_PROVIDER_RESPONSE' if data else 'UNAVAILABLE','data':data}
 
+@app.get('/api/guardian/phone/proof')
+def phone_proof():
+    path=Path(os.environ.get('GUARDIAN_PHONE_PROOF_FILE',str(Path.home()/'.local/state/inneros-nebius-demo/phone-test-20261030.json')))
+    try:data=json.loads(path.read_text())
+    except (OSError,ValueError):return {'ok':True,'status':'NOT_VERIFIED','public_dialing_enabled':False}
+    authority=data.get('existing_authority_readback') or {};execution=authority.get('execution') or {}
+    verified=authority.get('status')=='completed' and execution.get('executed') is True and execution.get('verified') is True
+    return {'ok':True,'status':'REAL_CALL_VERIFIED' if verified else 'NOT_VERIFIED','proposal_digest':data.get('proposal_digest'),'call_authorization_channel':data.get('readback',{}).get('approval_channel'),'authority_status':authority.get('status'),'authorized_at':authority.get('authorized_at'),'finished_at':authority.get('finished_at'),'owner_confirmed_conversation':bool(data.get('owner_confirmation',{}).get('conversation_succeeded')),'public_dialing_enabled':False,'physical_action_authorized':False,'guardian_action_acceptance':'NOT_VERIFIED','scope':'Recorded owner test, not a new call for this visitor'}
+
 @app.post('/api/guardian/diagnose')
 def diagnose(body:dict):
     if body.get('inference_mode')!='REAL_CACHED':return guardian.guardian_diagnose(body)
