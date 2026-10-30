@@ -32,3 +32,7 @@ def test_current_phone_report_uses_actual_access_point_states_and_load():
     assert 'Living conectado' in report and 'Estudio conectado' in report and len(report)<=600
     energy=spoken_report({**base,'category':'energy','signals':[{'ref':'battery_mode','state':'on'},{'ref':'battery_capacity_percent','state':75},{'ref':'output_power_w','state':541}]})
     assert '75 por ciento' in energy and '541 vatios' in energy
+
+def test_brief_report_discloses_a_partial_list_of_unreachable_signals():
+    report=spoken_report({'site':'bellini','category':'network','collected_at':'2026-10-30T16:00:00+00:00','source_observed_at':'2026-10-30T16:00:00+00:00','freshness':'RECENT_SOURCE_SAMPLE','signals':[{'label':'AP '+str(i),'state':'not_reachable'} for i in range(5)]})
+    assert 'no alcanza 5; entre ellas' in report and 'AP 0, AP 1, AP 2' in report and len(report)<=600
