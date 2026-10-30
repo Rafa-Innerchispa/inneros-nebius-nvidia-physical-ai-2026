@@ -121,14 +121,35 @@ The private InnerOS adapter completed one evidenced real inference using `nvidia
 This was the second owner-approved attempt. The first failed in response parsing and its usage was not retained. No automatic paid retries were used. The public demo still defaults to offline simulated inference; this receipt does not imply that running it without credentials invokes Nebius.
 
 
-## Interactive platform-backed console
+## Live infrastructure console — 30 October 2026
 
-**Public judge demo (verified October 30, 2026): [https://guardian.creatorcore.ai/](https://guardian.creatorcore.ai/).** External DNS, HTTPS, `/healthz`, the five isolated Guardian API routes, and historical Nebius receipt are live. Headless Chromium completed the synthetic lab workflow in desktop and mobile browsers: diagnose → staged dry-run plan → simulated recovery verification → backend evidence retrieval. No judge login is necessary; all targets are synthetic and the publicly exposed service has no device-administration authority. This safe interactive workflow currently uses `LOCAL_HEURISTIC`, **not** a new paid Nemotron call. **PERMIT / owner telephone callback is not linked** to the public lab; the underlying VoiceOps phone flow was demonstrated separately. To reproduce the backend-backed demo, follow [deployment instructions](deployment/README.md). It calls all five real InnerOS Guardian API routes. Analyze synthetic lab telemetry, prepare a dry-run plan, run an explicitly simulated verification and retrieve the backend evidence. No new paid inference or physical operation is permitted from the public UI. Phone approval remains **BLOCKED**, visibly and truthfully.
+**Open [Guardian](https://guardian.creatorcore.ai/).** Choose a site and system, then press **Read real infrastructure**. The central circle opens a readable report; the table lists actual observations and source timestamps. Desktop and mobile scrolling are supported.
 
-The [deployment adapter and rollback](deployment/README.md) document how the console imports the installed InnerOS router. The [public HTTPS evidence](docs/DEPLOYED_HTTP_EVIDENCE_20261027.json) records the five-route checks and denial cases. This Quick Tunnel address can change if its process restarts; it is a hackathon demo without an availability guarantee.
+| Source | Published observations |
+|---|---|
+| Casa Rafael / Network | 13 allowlisted Home Assistant network signals, including approved AP aliases |
+| Casa Rafael / Cameras | 6 camera/recorder signals; this is not a complete physical camera inventory |
+| Casa Rafael / Servers | 2 fleet nodes' aggregate service checks; a failed check does not prove a powered-off host |
+| Casa Rafael / Energy | Existing inverter/energy-history metrics; only values actually supplied are shown |
+| Bellini / Network | 14 targets from the existing Network Guardian MongoDB collector |
 
-The portable client now has a bounded output budget (default 2,048 tokens for explicitly requested live inference), retains provider usage even when content is incomplete, and never automatically retries a billable request. Current public demo interactions use local heuristic diagnostics plus the separately recorded real NVIDIA receipt; they do not silently spend credits.
+These are read-only integrations with existing collectors, not synthetic incident injection. A source failure returns an explicit error instead of fabricated telemetry. Retrieval time is separate from source observation time; unchanged HA entity timestamps are not fresh physical probes. Monitor reachability does not establish the cause of an outage. Private addresses, credentials and private device names are withheld.
 
+### NVIDIA Nemotron
+
+The owner-authorized frontend request analyzed sanitized real Casa and Bellini snapshots with **NVIDIA Nemotron 3 Nano through Nebius Token Factory**. The persisted report contains response ID **chatcmpl-5de01922-537c-4436-b520-de5fda0b2cd0**, **3,404 input / 1,745 output tokens**, a provider receipt hash, snapshot bindings and **25.795 seconds** measured latency. The output limit was 2,048 tokens. No retry or top-up occurred.
+
+**Read recorded Nemotron analysis** displays that point-in-time result; it does not spend credits on each refresh or analyze later readings automatically. The one-shot authorization is consumed and additional requests return HTTP 409. The model recommended reviewing/rebooting an unreachable AP; this is an unverified recommendation, not a confirmed hardware diagnosis or execution permission. **LOCAL_HEURISTIC** remains a separate, explicitly labeled route in the isolated legacy lab API.
+
+### Human-in-the-loop owner calls
+
+**Request owner call** creates a snapshot-bound request in the existing authenticated Home Assistant approval inbox. The owner approves or cancels on their Android. Only the preconfigured owner mobile alias can be called; no public visitor can approve, choose a number, or authorize device mutations.
+
+After approval, the existing VoiceOps service independently consumes the single-use, expiring HA identity proof. Its local voice opens with a short deterministic report from the selected source: site, sample time, observations needing attention, and uncertainty. The exact spoken report is shown in the UI and bound to the approval digest. This narration does not perform another cloud inference. The first generic callback was physically confirmed by the owner; the contextual-report follow-up has its own approval and evidence, and must not be claimed heard until confirmed.
+
+Requests have a persistent ten-minute cooldown, a ten-minute approval expiry and a durable dispatch claim. Interrupted or ambiguous dispatches are not automatically redialed. The web reports approval and execution states separately. No physical device execution endpoint is exposed, and a successful call does not approve a restart or prove recovery.
+
+See [deployment and rollback](deployment/README.md). The earlier synthetic CLI, API examples and video below remain historical/reproducible lab artifacts; they do not represent current live observations.
 
 ## Demo video and final handoff
 
