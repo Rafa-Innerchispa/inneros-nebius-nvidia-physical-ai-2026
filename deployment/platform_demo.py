@@ -6,6 +6,7 @@ from pathlib import Path
 import json,os,sys
 from fastapi import FastAPI,Request
 import secrets,time
+from deployment.live_routes import router as live_router,budget as live_budget
 from deployment.lab_workflow import LabWorkflow,public_permit,digest
 from fastapi.responses import FileResponse,JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -28,14 +29,14 @@ if store.exists():
 async def boundary(request:Request,call_next):
     path=request.url.path
     if request.method=="POST" and path.startswith("/api/guardian/"):
-        if path not in {"/api/guardian/diagnose","/api/guardian/actions/plan","/api/guardian/recovery/verify","/api/guardian/permits/request","/api/guardian/permits/decision","/api/guardian/permits/verify","/api/guardian/permits/owner-call"}:
+        if path not in {"/api/guardian/diagnose","/api/guardian/actions/plan","/api/guardian/recovery/verify","/api/guardian/permits/request","/api/guardian/permits/decision","/api/guardian/permits/verify","/api/guardian/permits/owner-call","/api/guardian/live/call-request","/api/guardian/live/analyze"}:
             return JSONResponse({"detail":"public_execution_not_exposed"},status_code=405)
         raw=await request.body()
         if len(raw)>16384:return JSONResponse({"detail":"payload_too_large"},status_code=413)
         try: body=json.loads(raw)
         except ValueError:return JSONResponse({"detail":"invalid_json"},status_code=422)
         if not isinstance(body,dict):return JSONResponse({"detail":"object_required"},status_code=422)
-        if path.startswith('/api/guardian/permits/'):
+        if path.startswith('/api/guardian/permits/') or path.startswith('/api/guardian/live/'):
             origin=request.headers.get('origin')
             if origin and origin!=str(request.base_url).rstrip('/'):
                 return JSONResponse({'detail':'cross_origin_mutation_denied'},status_code=403)
@@ -197,6 +198,7 @@ async def owner_call(request:Request):
         workflow.call_result(pid,'PREPARATION_UNVERIFIED',{'error_type':type(e).__name__,'retry':False})
         return JSONResponse({'detail':'call_preparation_unverified_check_existing_owner_inbox_no_retry'},status_code=502)
 
+app.include_router(live_router)
 app.include_router(guardian.router)
 app.mount("/examples",StaticFiles(directory=ROOT/"examples"),name="recorded-evidence")
 
@@ -204,4 +206,4 @@ app.mount("/examples",StaticFiles(directory=ROOT/"examples"),name="recorded-evid
 def index():return FileResponse(ROOT/"web/index.html")
 
 @app.get("/healthz")
-def health():return {"ok":True,"scope":"isolated_synthetic_lab","paid_inference_enabled":False,"physical_execution_enabled":False,"release":ROOT.name,"nemotron_provider_receipt_available":bool(current_inference()),"phone_request_policy":"EXISTING_OWNER_CREDENTIAL_AND_COMPANION_APPROVAL","guardian_physical_action_approval":"BLOCKED"}
+def health():return {"ok":True,"scope":"real_infrastructure_readonly","paid_inference_enabled":False,"one_owner_authorized_model_request_available":live_budget(),"physical_execution_enabled":False,"release":ROOT.name,"nemotron_provider_receipt_available":bool(current_inference()),"phone_request_policy":"EXISTING_OWNER_CREDENTIAL_AND_COMPANION_APPROVAL","guardian_physical_action_approval":"BLOCKED"}
