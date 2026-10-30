@@ -19,6 +19,12 @@ def test_server_aggregate_never_claims_host_power():
     text=calls.spoken_report(observation(site='casa',site_label='Casa Rafael',category='servers',signals=[{'label':'Server 1','state':'checks_need_attention'}]))
     assert 'no significa que estén apagados' in text
 
+def test_energy_report_understands_actual_ha_on_off_states_and_unknown():
+    def report(signals):return calls.spoken_report(observation(site='casa',site_label='Casa Rafael',category='energy',signals=signals))
+    assert 'operación con batería' in report([{'ref':'battery_mode','state':'on'}])
+    assert 'no reporta un corte activo' in report([{'ref':'battery_mode','state':'off'},{'ref':'outage_active','state':False}])
+    assert 'no confirma el estado' in report([{'ref':'battery_mode','state':'unknown'}])
+
 def test_prepare_binds_exact_report_and_only_dispatches_after_approval(monkeypatch,tmp_path):
     store=LiveInfrastructure(tmp_path/'calls.sqlite3');body=observation()
     with store.db() as db:db.execute('INSERT INTO observations VALUES (?,?,?,?,?,?)',('obs','bellini','network','snapshot-digest',json.dumps(body),time.time()))
