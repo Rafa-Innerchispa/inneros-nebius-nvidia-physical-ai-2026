@@ -19,7 +19,7 @@ def spoken_report(snapshot):
     clock=datetime.fromisoformat(at).astimezone(timezone(timedelta(hours=-5))).strftime('%H:%M')
     text=f'Informe de {category} en {site}. '
     if bad:
-        text+=f'De {len(signals)} señales, el monitor no alcanza {len(bad)}: '+', '.join(x['label'] for x in bad[:3])+'. Esto no confirma una avería física. '
+        text+=f'De {len(signals)} señales, el monitor no alcanza {len(bad)}'+('; entre ellas, ' if len(bad)>3 else ': ')+', '.join(x['label'] for x in bad[:3])+'. Esto no confirma una avería física. '
     elif attention:text+=f'{len(attention)} servidores tienen comprobaciones de servicios que requieren revisión; no significa que estén apagados. '
     elif snapshot['category']=='energy':
         values={x['ref']:x['state'] for x in signals}
