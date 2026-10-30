@@ -6,9 +6,34 @@
 [![NVIDIA Open Models](https://img.shields.io/badge/NVIDIA-Open_Models-76B900.svg)](https://build.nvidia.com)
 [![Nebius AI Cloud](https://img.shields.io/badge/Nebius-AI_Cloud-00D4B2.svg)](https://nebius.ai)
 
-> **Cloud intelligence. Local authority. Verified physical actions.**
+> **Real infrastructure. NVIDIA intelligence. Human authority.**
 
 ---
+
+## Open the working application
+
+**[guardian.creatorcore.ai](https://guardian.creatorcore.ai/)** reads actual existing infrastructure collectors. No synthetic outage replaces an unavailable source in the public workflow.
+
+| Judge action | What actually happens |
+|---|---|
+| Choose Casa Rafael / Bellini and Read real infrastructure | Reads the existing source, persists an allowlisted snapshot and shows source/retrieval timestamps. Casa: network, cameras/recorders, servers and energy. Bellini: network. |
+| View recorded Nemotron result | Reads the real, point-in-time NVIDIA/Nebius response with its provider receipt. This does not perform another generation. |
+| Test Nebius connection - no inference | Makes an authenticated GET to the provider model catalog, at most once per minute. It confirms the NVIDIA model is available; no completion request or generated tokens. |
+| New inference | Locked until there is a fresh, unused explicit owner credit authorization. Maximum 2,048 output tokens per attempt; no automatic paid retry or top-up. |
+| Request owner call | Refreshes the selected source and previews the exact spoken report. The owner approves on authenticated Home Assistant; VoiceOps calls the fixed private mobile alias only after approval. |
+| Download PDF | Exports a branded evidence report; source observations, stored model result, provider check or session-owned call audit. No extra inference or call. |
+
+The orbit nodes show actual running/completed/not-run/error states; owner approval has a separate waiting state. **What actually ran?** lists real HTTP requests, response codes and measured durations. There are no invented delays to imitate model work. Reading Wi-Fi does not silently start a model request or a telephone call.
+
+### Acceptance evidence, 30 October 2026
+
+- **Real inference:** NVIDIA Nemotron 3 Nano on Nebius Token Factory, response **chatcmpl-5de01922-537c-4436-b520-de5fda0b2cd0**, 3,404 input / 1,745 output tokens, 25.795 seconds. The exact analyzed snapshots are retained.
+- **Real external catalog check:** HTTP 200 at 11:30:16 Ecuador; requested NVIDIA model listed; 0.818 seconds; zero generation requests/tokens.
+- **Real owner callback:** **call_308f8268db41d59ec64b6f1f**, owner-authorized at 11:38:30 Ecuador, completed at 11:40:43. Owner explicitly confirmed hearing the Bellini report and its repetition after asking for it. HA and VoiceOps retained completed/verified dispatch evidence.
+- **Phone source binding:** the report states the selected site, actual monitor findings and sample time. Greetings and call-purpose questions repeat that immutable context without requiring a local or external LLM. Free-form conversation remains dependent on the local reasoner; this acceptance does not claim unrestricted autonomous dialogue.
+- **Validation:** 41 private-platform Guardian tests passed; Guardian and VoiceOps PR CI passed. The phone bridge/transport tests passed, the effective runtime module path was checked, and deployment backups/rollback were retained.
+
+See [sanitized acceptance evidence](examples/verified-live-acceptance-20261030.json) and the [final handoff](GUARDIAN_HANDOFF_CHATGPT_20261030.md). Public physical device mutation remains disabled. A model recommendation or a completed phone call is not proof of device recovery or authorization to reboot equipment.
 
 ## 💡 The Core Idea
 
@@ -17,14 +42,14 @@ Large Language Models are brilliant diagnosticians, but giving an external cloud
 **InnerOS Infrastructure Guardian** bridges this gap:
 1. **Cloud Intelligence (Nebius + NVIDIA):** A model returned by the authenticated Nebius Token Factory catalog is selected only when its ID is explicitly NVIDIA/Nemotron. A provider receipt distinguishes real inference from the default local heuristic.
 2. **Strict Trust Boundary & Sanitization:** Before leaving the building, private IPs, customer names, and MACs are sanitized. Nebius never receives direct control or credentials.
-3. **Local Authority & Governed Execution:** All physical mutations (`network.device.reboot.v1`, `network.device.poe_cycle.v1`) are approval-gated. Live status is impossible without a connected provider adapter and a real provider receipt.
-4. **Verified Physical Recovery:** A simulated probe is labeled `SIMULATED`; only a connected recovery probe can produce `verification_mode=REAL`.
+3. **Local Authority & Governed Execution:** Real source observations and remote inference evidence are separate from execution authority. The public application can request an owner-approved callback; it cannot mutate customer equipment.
+4. **Evidence-backed Verification:** The owner-confirmed callback has dispatch and human audibility evidence. Infrastructure observations do not imply that a reboot or recovery was performed.
 
 ---
 
-## 🚀 Quickstart & Interactive Demo
+## Offline developer fixture (not the public application)
 
-Run the standalone demo in under 30 seconds:
+The following harness exists for reproducible offline tests. It is separate from the real infrastructure workflow above:
 
 ```bash
 # Clone the repository
@@ -145,7 +170,7 @@ The owner-authorized frontend request analyzed sanitized real Casa and Bellini s
 
 **Request owner call** creates a snapshot-bound request in the existing authenticated Home Assistant approval inbox. The owner approves or cancels on their Android. Only the preconfigured owner mobile alias can be called; no public visitor can approve, choose a number, or authorize device mutations.
 
-After approval, the existing VoiceOps service independently consumes the single-use, expiring HA identity proof. Its local voice opens with a short deterministic report from the selected source: site, sample time, observations needing attention, and uncertainty. The exact spoken report is shown in the UI and bound to the approval digest. This narration does not perform another cloud inference. The first generic callback was physically confirmed by the owner; the contextual-report follow-up has its own approval and evidence, and must not be claimed heard until confirmed.
+After approval, the existing VoiceOps service independently consumes the single-use, expiring HA identity proof. Its local voice opens with a short deterministic report from the selected source: site, sample time, observations needing attention, and uncertainty. The exact spoken report is shown in the UI and bound to the approval digest. This narration does not perform another cloud inference. The first generic callback was physically confirmed by the owner. The corrected contextual-report callback was subsequently approved and the owner explicitly confirmed hearing the selected Bellini report and its repetition.
 
 Requests have a persistent ten-minute cooldown, a ten-minute approval expiry and a durable dispatch claim. Interrupted or ambiguous dispatches are not automatically redialed. The web reports approval and execution states separately. No physical device execution endpoint is exposed, and a successful call does not approve a restart or prove recovery.
 

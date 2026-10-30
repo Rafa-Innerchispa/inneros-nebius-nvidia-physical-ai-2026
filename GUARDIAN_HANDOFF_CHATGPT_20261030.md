@@ -1,4 +1,50 @@
-# Guardian delivery and phone verification — 30 October 2026
+# Guardian - final verified handoff, 30 October 2026
+
+## Final acceptance update (supersedes the earlier report below)
+
+The corrected callback **call_308f8268db41d59ec64b6f1f** completed after HA owner
+authorization at 11:38:30 Ecuador; finished at 11:40:43. Executed/verified dispatch
+was retained. Rafael explicitly confirmed hearing the real Bellini report and
+hearing it repeated when asked. This is now human-confirmed audibility evidence.
+
+VoiceOps PR #13 is merged and deployed at
+`592caf933773c187960e41e165482aab12778fbe`. Greetings and call-purpose/report
+questions repeat the immutable source-bound report before consulting any LLM.
+The owner separately authorized this runtime restart; zero active calls were
+verified first, prior source was backed up, and the effective module/PID checked.
+Piper and Whisper are local. Free-form dialogue can still depend on the local
+reasoner; no unrestricted autonomous-dialogue claim is made.
+
+The public console now displays actual HTTP operations, measured durations and
+running/done/not-run/error/owner-waiting states. **View recorded Nemotron result**
+reads the real saved inference, not a new request. **Test Nebius connection - no
+inference** checks the authenticated provider catalog, at most once per minute.
+HTTP 200 confirmed the required NVIDIA model was available, with 0.818 seconds
+measured check time and zero generation requests/tokens.
+
+The real inference remains response
+`chatcmpl-5de01922-537c-4436-b520-de5fda0b2cd0`, NVIDIA Nemotron 3 Nano via Nebius,
+3,404 input / 1,745 output tokens and 25.795 seconds. Its authorization is consumed;
+new paid requests are locked (HTTP 409), output is capped at 2,048 tokens per
+explicit authorization, and no automatic paid retry or top-up is supported.
+
+Current validation: **41 private-platform Guardian tests passed**, applicable
+GitHub CI checks passed, and VoiceOps bridge/transport tests passed. Source reads,
+branded PDF downloads, real catalog connection and owner-approved informational
+callback are real. No public physical device mutation or recovery is claimed.
+
+Public acceptance: [verified-live-acceptance-20261030.json](examples/verified-live-acceptance-20261030.json).
+The README leads with the working judge flow and distinguishes offline fixtures
+from production sources. Both projects' functional changes are preserved on their
+own main branches. Actual Guardian release is verified via `/healthz` and delivery
+evidence, not inferred from CI. No Devpost submission is performed or claimed.
+
+Intel evidence includes `GUARDIAN_FINAL_OWNER_CONFIRMED_20261030.json`,
+`GUARDIAN_TRANSPARENT_WORKFLOW_20261030.json`,
+`VOICEOPS_BOUND_REPORT_DEPLOY_20261030.json` and
+`VOICEOPS_REPORT_MODULE_VERIFIED_20261030.json` under `inneros_core/var/evidence/`.
+
+## Earlier same-day report (historical; superseded above)
 
 Owner requested this handoff for ChatGPT. No new agent task, paid inference or
 physical operation is authorized by this document.
