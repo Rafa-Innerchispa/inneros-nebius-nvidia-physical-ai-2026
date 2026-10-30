@@ -10,6 +10,7 @@ def client(monkeypatch,tmp_path):
     root=Path(__file__).resolve().parents[1]
     if not os.environ.get("INNEROS_PLATFORM_ROOT"):pytest.skip("Private platform not installed in standalone CI")
     monkeypatch.setenv("GUARDIAN_EVIDENCE_FILE",str(tmp_path/"evidence.json"))
+    monkeypatch.setenv("GUARDIAN_WORKFLOW_FILE",str(tmp_path/"workflow.sqlite3"))
     spec=importlib.util.spec_from_file_location("guardian_demo_test",root/"deployment/platform_demo.py")
     mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod)
     return TestClient(mod.app)
