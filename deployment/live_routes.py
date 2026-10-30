@@ -7,7 +7,7 @@ from fastapi import APIRouter,Request
 from fastapi.responses import JSONResponse,Response
 import httpx
 from deployment.live_infrastructure import LiveInfrastructure,CATALOG,now,digest
-from deployment.governed_call import prepare_call,worker
+from deployment.governed_call import prepare_call,worker,spoken_report
 @asynccontextmanager
 async def context_call_lifespan(app):
     task=asyncio.create_task(worker(store()))
@@ -44,7 +44,7 @@ async def readings(site:str,category:str,request:Request):
     try:result=await store().observe(site,category)
     except ValueError as e:return JSONResponse({'detail':str(e)},status_code=422)
     except Exception:return JSONResponse({'detail':'existing_source_unavailable_no_simulated_replacement','site':site,'category':category},status_code=503)
-    response=JSONResponse(result)
+    response=JSONResponse({**result,'call_report_preview':spoken_report(result)})
     if not sid(request):response.set_cookie('guardian_session',secrets.token_hex(24),httponly=True,secure=request.url.scheme=='https',samesite='strict',max_age=1800)
     return response
 @router.post('/call-request')
@@ -90,11 +90,23 @@ async def export_call(request_id:str,request:Request):
 async def export_overview():
     from deployment.pdf_report import overview_pdf
     return pdf_response(await asyncio.to_thread(overview_pdf),'guardian-evaluation-guide.pdf')
+@router.get('/reports/provider-connection.pdf')
+async def export_provider_connection():
+    from deployment.pdf_report import provider_pdf
+    path=state_path('nebius-catalog-connectivity.json')
+    if not path.exists():return JSONResponse({'detail':'no_recorded_provider_check'},status_code=404)
+    return pdf_response(await asyncio.to_thread(provider_pdf,json.loads(path.read_text())),'guardian-nebius-connection.pdf')
 @router.get('/analysis')
 def analysis():
     path=state_path('real-infrastructure-nemotron.json')
-    if not path.exists():return {'ok':True,'status':'NOT_REQUESTED','one_shot_available':budget()}
-    return {'ok':True,'status':'RECORDED_REAL_INFRASTRUCTURE_ANALYSIS','one_shot_available':False,'analysis':json.loads(path.read_text())}
+    controls={'new_paid_request_authorized':budget(),'max_output_tokens_per_authorized_request':2048,'automatic_paid_retries':0,'public_can_purchase_or_top_up':False,'current_authorization_consumed':state_path('real-infrastructure-one-shot.consumed').exists()}
+    if not path.exists():return {'ok':True,'status':'NOT_REQUESTED','one_shot_available':budget(),'cost_controls':controls}
+    return {'ok':True,'status':'RECORDED_REAL_INFRASTRUCTURE_ANALYSIS','one_shot_available':budget(),'cost_controls':controls,'analysis':json.loads(path.read_text())}
+@router.get('/provider-connection')
+async def provider_connection():
+    from deployment.provider_check import connection_check
+    result=await connection_check(state_path('.'))
+    return JSONResponse(result,status_code=200 if result['ok'] else 502)
 @router.post('/analyze')
 async def analyze(request:Request):
     body=await request.json()
