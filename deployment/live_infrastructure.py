@@ -131,7 +131,7 @@ class LiveInfrastructure:
         if row['action_id']:
             try:
                 authority=await mongo_read('ambient_guardian_mobile_approvals',{'action_id':row['action_id']},{'_id':0,'status':1,'authorized_at':1,'finished_at':1,'evidence.executed':1,'evidence.verified':1})
-                status=str(authority.get('status') or status).upper()
+                if status!='DISPATCH_UNVERIFIED_NO_RETRY':status=str(authority.get('status') or status).upper()
             except Exception:pass
-        if time.time()>row['expires'] and status in ('PREPARING','AWAITING_OWNER_APPROVAL','AWAITING_OWNER_CALL_APPROVAL'):status='EXPIRED'
+        if time.time()>row['expires'] and status in ('PREPARING','PREPARING_CONTEXT','AWAITING_CONTEXT_APPROVAL','AWAITING_OWNER_APPROVAL','AWAITING_OWNER_CALL_APPROVAL'):status='EXPIRED'
         return {'ok':True,'request_id':id,'status':status,'snapshot_id':row['snapshot_id'],'snapshot_digest':row['digest'],'expires_at_epoch':row['expires'],'authorized_at':authority.get('authorized_at'),'finished_at':authority.get('finished_at'),'executed':(authority.get('evidence') or {}).get('executed',False),'verified':(authority.get('evidence') or {}).get('verified',False),'approval_channel':'home_assistant_companion','physical_device_action_authorized':False}

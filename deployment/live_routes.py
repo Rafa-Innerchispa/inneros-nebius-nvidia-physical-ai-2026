@@ -2,11 +2,21 @@
 import asyncio,json,os,secrets,time
 from pathlib import Path
 from functools import lru_cache
+from contextlib import asynccontextmanager
 from fastapi import APIRouter,Request
 from fastapi.responses import JSONResponse
 import httpx
 from deployment.live_infrastructure import LiveInfrastructure,CATALOG,now,digest
-router=APIRouter(prefix='/api/guardian/live')
+from deployment.governed_call import prepare_call,worker
+@asynccontextmanager
+async def context_call_lifespan(app):
+    task=asyncio.create_task(worker(store()))
+    try:yield
+    finally:
+        task.cancel()
+        try:await task
+        except asyncio.CancelledError:pass
+router=APIRouter(prefix='/api/guardian/live',lifespan=context_call_lifespan)
 STATE=Path.home()/'.local/state/inneros-nebius-demo'
 def state_path(name):return Path(os.environ.get('GUARDIAN_LIVE_STATE_DIR',str(STATE)))/name
 @lru_cache(maxsize=4)
@@ -45,14 +55,8 @@ async def call_request(request:Request):
     try:request_id,snapshot=store().reserve_call(str(body.get('snapshot_id','')),sid(request))
     except ValueError as e:return JSONResponse({'detail':str(e)},status_code=429 if 'cooldown' in str(e) else 409)
     try:
-        token=owner_token()
-        async with httpx.AsyncClient(timeout=18,follow_redirects=False) as client:
-            r=await client.post('http://127.0.0.1:8794/api/alexa',headers={'x-ambient-skill-bridge':token},json={'utterance':'llama a mi celular usando Grandstream','speaker_context':{'response_locale':'es-US'}})
-            r.raise_for_status();prepared=r.json().get('prepared_action') or {}
-        if prepared.get('status')!='approval_required' or prepared.get('executed') is not False or prepared.get('approval_channel')!='home_assistant_companion' or not prepared.get('action_id'):raise ValueError('existing_owner_gate_not_verified')
-        safe={k:prepared.get(k) for k in ('action_id','approval_task_id','expires_at','approval_channel')};safe['snapshot_digest']=snapshot['digest']
-        store().save_call(request_id,'AWAITING_OWNER_APPROVAL',safe)
-        return {'ok':True,'request_id':request_id,'status':'AWAITING_OWNER_APPROVAL','snapshot_id':snapshot['id'],'snapshot_digest':snapshot['digest'],'approval_url':'https://ha.pcdoctor.ai/inneros-approvals/pendientes','physical_device_action_authorized':False}
+        reason=await prepare_call(store(),request_id,snapshot)
+        return {'ok':True,'request_id':request_id,'status':'AWAITING_OWNER_APPROVAL','spoken_report':reason,'snapshot_id':snapshot['id'],'snapshot_digest':snapshot['digest'],'approval_url':'https://ha.pcdoctor.ai/inneros-approvals/pendientes','physical_device_action_authorized':False}
     except Exception:
         store().save_call(request_id,'PREPARATION_UNVERIFIED',{})
         return JSONResponse({'detail':'call_preparation_unverified_check_existing_owner_inbox_do_not_retry','request_id':request_id},status_code=502)
